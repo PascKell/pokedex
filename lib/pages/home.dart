@@ -115,7 +115,7 @@ class _HomeState extends State<Home> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (_) => DetailPage(pokemon: pokemon)
+                        builder: (_) => DetailPage(pokemon: pokemon, color1: typeColor(pokemon['type1']),)
                     )
                   );
                 },

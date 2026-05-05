@@ -2,10 +2,10 @@
   ini_set('display_errors', 1);
   error_reporting(E_ALL);
 
-  $host_name = 'db5020305418.hosting-data.io';
-  $database = 'dbs15600336';
-  $user_name = 'dbu484222';
-  $password = 'Apx001esk!';
+  $host_name = 'host_name';
+  $database = 'database';
+  $user_name = 'user_name';
+  $password = 'password';
 
   $link = new mysqli($host_name, $user_name, $password, $database);
 
