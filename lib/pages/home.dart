@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:project_app/pages/detailPage.dart';
 
 Future<List<dynamic>> fetchPokemon() async {
   final response = await http.get(
@@ -109,39 +110,52 @@ class _HomeState extends State<Home> {
             itemCount: data.length,
             itemBuilder: (context, index) {
               final pokemon = data[index];
-              return Container(
-                margin: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                padding: EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  gradient: typeGradient(
-                      pokemon['type1'],
-                      pokemon['type2']
-                  ),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => DetailPage(pokemon: pokemon)
+                    )
+                  );
+                },
+                child: Container(
+                    margin: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                    padding: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      gradient: typeGradient(
+                          pokemon['type1'],
+                          pokemon['type2']
+                      ),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          pokemon['name'],
-                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              pokemon['name'],
+                              style: TextStyle(color: Colors.white, fontSize: 18),
+                            ),
+                            Text(
+                              "#${pokemon['nummer']}",
+                              style: TextStyle(color: Colors.white70),
+                            ),
+                          ],
                         ),
-                        Text(
-                          "#${pokemon['nummer']}",
-                          style: TextStyle(color: Colors.white70),
+                        Hero(
+                          tag: "pokemon_${pokemon['nummer']}",
+                          child: Image.network(
+                            "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon['nummer']}.png",
+                            width: 70,
+                            height: 70,
+                          ),
                         ),
                       ],
                     ),
-                    Image.network(
-                      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon['nummer']}.png",
-                      width: 70,
-                      height: 70,
-                    ),
-                  ],
-                ),
+                )
               );
             },
           );
