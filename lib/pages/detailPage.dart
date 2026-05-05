@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:project_app/assets/pokemonColor.dart' as pokemon_color;
+import 'package:project_app/models/pokemon.dart';
 
 class DetailPage extends StatelessWidget {
-  final dynamic pokemon;
+  final Pokemon pokemon;
   final Color color1;
 
   const DetailPage({
@@ -18,8 +19,8 @@ class DetailPage extends StatelessWidget {
       body: Container(
         decoration: BoxDecoration(
           gradient: pokemon_color.detailTypeGradient(
-            pokemon['type1'],
-            pokemon['type2']
+            pokemon.type1,
+            pokemon.type2
           ),
         ),
         child: SafeArea(
@@ -38,7 +39,7 @@ class DetailPage extends StatelessWidget {
                   SizedBox(height: 40),
 
                   Text(
-                    pokemon['name'],
+                    pokemon.name,
                     style: TextStyle(
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
@@ -47,16 +48,16 @@ class DetailPage extends StatelessWidget {
                   ),
 
                   Text(
-                    "#${pokemon['nummer']}",
+                    "#${pokemon.nummer}",
                     style: TextStyle(color: Colors.white70),
                   ),
 
                   SizedBox(height: 20),
 
                   Hero(
-                    tag: "pokemon_${pokemon['nummer']}",
+                    tag: "pokemon_${pokemon.nummer}",
                     child: Image.network(
-                      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon['nummer']}.png",
+                      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.nummer}.png",
                       width: 180,
                       height: 180,
                     ),
@@ -79,10 +80,9 @@ class DetailPage extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              buildTypeChip(pokemon['type1']),
+                              buildTypeChip(pokemon.type1),
                               SizedBox(width: 10),
-                              if (pokemon['type2'] != null)
-                                buildTypeChip(pokemon['type2']),
+                              buildTypeChip(pokemon.type2),
                             ],
                           ),
                           SizedBox(height: 20),
@@ -98,13 +98,13 @@ class DetailPage extends StatelessWidget {
                           SizedBox(height: 10),
 
                           Text(
-                            "Nummer: ${pokemon['nummer']}",
+                            "Nummer: ${pokemon.nummer}",
                             style: TextStyle(
                               color: Colors.white
                             ),
                           ),
                           Text(
-                            "Name: ${pokemon['name']}",
+                            "Name: ${pokemon.name}",
                             style: TextStyle(
                               color: Colors.white
                             ),

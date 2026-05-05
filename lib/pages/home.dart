@@ -5,16 +5,17 @@ import 'package:http/http.dart' as http;
 import 'package:project_app/pages/detailPage.dart';
 
 import 'package:project_app/assets/pokemonColor.dart' as pokemon_color;
+import 'package:project_app/models/pokemon.dart';
 
-Future<List<dynamic>> fetchPokemon() async {
+Future<List<Pokemon>> fetchPokemon() async {
   final response = await http.get(
     Uri.parse('https://pakeller.de/getPokedex.php'),
   );
 
   if (response.statusCode == 200) {
-    print("Daten wurden erfolgreich geladen");
-    print(response.body.toString());
-    return json.decode(response.body);
+    final List data = json.decode(response.body);
+
+    return data.map((json) => Pokemon.fromJson(json)).toList();
   } else {
     throw Exception('Fehler beim Laden');
   }
@@ -29,8 +30,8 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
 
-  List<dynamic> allPokemon = [];
-  List<dynamic> filteredPokemon = [];
+  List<Pokemon> allPokemon = [];
+  List<Pokemon> filteredPokemon = [];
   bool isLoaded = false;
   String searchText = "";
 
@@ -41,13 +42,20 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> loadData() async {
-    final data = await fetchPokemon();
+    try {
+      final data = await fetchPokemon();
 
-    setState(() {
-      allPokemon = data;
-      filteredPokemon = data;
-      isLoaded = true;
-    });
+      setState(() {
+        allPokemon = data;
+        filteredPokemon = data;
+        isLoaded = true;
+      });
+    } catch (e) {
+      print("Fehler beim Laden: $e");
+      setState(() {
+        isLoaded = true;
+      });
+    }
   }
 
   void filterPokemon(String query) {
@@ -55,8 +63,8 @@ class _HomeState extends State<Home> {
       searchText = query;
 
       filteredPokemon = allPokemon.where((pokemon) {
-        final name = pokemon['name'].toLowerCase();
-        final nummer = pokemon['nummer'].toString();
+        final name = pokemon.name.toLowerCase();
+        final nummer = pokemon.nummer.toString();
 
         return name.contains(query.toLowerCase()) || nummer.contains(query);
       }).toList();
@@ -119,7 +127,7 @@ class _HomeState extends State<Home> {
                       MaterialPageRoute(
                         builder: (_) => DetailPage(
                           pokemon: pokemon,
-                          color1: pokemon_color.typeColor(pokemon['type1']),
+                          color1: pokemon_color.typeColor(pokemon.type1),
                         ),
                       ),
                     );
@@ -129,8 +137,8 @@ class _HomeState extends State<Home> {
                     padding: EdgeInsets.all(5),
                     decoration: BoxDecoration(
                       gradient: pokemon_color.typeGradient(
-                        pokemon['type1'],
-                        pokemon['type2'],
+                        pokemon.type1,
+                        pokemon.type2,
                       ),
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -141,19 +149,19 @@ class _HomeState extends State<Home> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              pokemon['name'],
+                              pokemon.name,
                               style: TextStyle(color: Colors.white, fontSize: 18),
                             ),
                             Text(
-                              "#${pokemon['nummer']}",
+                              "#${pokemon.nummer}",
                               style: TextStyle(color: Colors.white70),
                             ),
                           ],
                         ),
                         Hero(
-                          tag: "pokemon_${pokemon['nummer']}",
+                          tag: "pokemon_${pokemon.nummer}",
                           child: Image.network(
-                            "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon['nummer']}.png",
+                            pokemon.imageUrl,
                             width: 70,
                             height: 70,
                           ),
