@@ -53,3 +53,17 @@ LinearGradient typeGradient(String t1, String? t2) {
     end: Alignment.centerRight,
   );
 }
+
+LinearGradient detailTypeGradient(String t1, String? t2) {
+  return LinearGradient(
+    colors: [
+      typeColor(t1),
+      typeColor(t1),
+      typeColor(t2 ?? t1),
+      typeColor(t2 ?? t1),
+      typeColor(t2 ?? t1),
+    ],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+}
