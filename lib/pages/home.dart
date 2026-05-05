@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:project_app/pages/detailPage.dart';
 
+import 'package:project_app/assets/pokemonColor.dart' as pokemonColor;
+
 Future<List<dynamic>> fetchPokemon() async {
   final response = await http.get(
     Uri.parse('https://pakeller.de/getPokedex.php'),
@@ -16,60 +18,6 @@ Future<List<dynamic>> fetchPokemon() async {
   } else {
     throw Exception('Fehler beim Laden');
   }
-}
-
-Color typeColor(String type) {
-  switch (type.toLowerCase()) {
-    case 'feuer':
-      return Colors.red;
-    case 'wasser':
-      return Colors.blue;
-    case 'pflanze':
-      return Colors.green;
-    case 'elektro':
-      return Colors.amber;
-    case 'eis':
-      return Colors.cyanAccent;
-    case 'kampf':
-      return Colors.orange;
-    case 'gift':
-      return Colors.purple;
-    case 'boden':
-      return Colors.brown;
-    case 'flug':
-      return Colors.lightBlue;
-    case 'psycho':
-      return Colors.pink;
-    case 'käfer':
-      return Colors.lightGreen;
-    case 'gestein':
-      return Colors.grey;
-    case 'geist':
-      return Colors.deepPurple;
-    case 'drache':
-      return Colors.indigo;
-    case 'unlicht':
-      return Colors.black87;
-    case 'stahl':
-      return Colors.blueGrey;
-    case 'fee':
-      return Colors.pinkAccent;
-    default:
-      return Colors.brown.shade300;
-  }
-}
-
-LinearGradient typeGradient(String t1, String? t2) {
-  return LinearGradient(
-    colors: [
-      typeColor(t1),
-      typeColor(t1),
-      typeColor(t2 ?? t1),
-      Colors.white,
-    ],
-    begin: Alignment.centerLeft,
-    end: Alignment.centerRight,
-  );
 }
 
 class Home extends StatefulWidget {
@@ -115,7 +63,7 @@ class _HomeState extends State<Home> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (_) => DetailPage(pokemon: pokemon, color1: typeColor(pokemon['type1']),)
+                        builder: (_) => DetailPage(pokemon: pokemon, color1: pokemonColor.typeColor(pokemon['type1']),)
                     )
                   );
                 },
@@ -123,7 +71,7 @@ class _HomeState extends State<Home> {
                     margin: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                     padding: EdgeInsets.all(5),
                     decoration: BoxDecoration(
-                      gradient: typeGradient(
+                      gradient: pokemonColor.typeGradient(
                           pokemon['type1'],
                           pokemon['type2']
                       ),
